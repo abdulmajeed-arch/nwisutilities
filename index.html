@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NWIS UTILITIES</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        
+        :root {
+            --bg: #ffffff; --text: #1e293b; --card: #f8fafc; --border: #e2e8f0; --accent: #3b82f6;
+        }
+        [data-theme='dark'] {
+            --bg: #0f172a; --text: #f1f5f9; --card: #1e293b; --border: #334155; --accent: #38bdf8;
+        }
+        [data-theme='midnight'] {
+            --bg: #020617; --text: #94a3b8; --card: #0f172a; --border: #1e293b; --accent: #818cf8;
+        }
+
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: var(--bg); 
+            color: var(--text); 
+            transition: all 0.3s ease;
+            min-height: 100vh;
+        }
+
+        /* STRICT TAB ISOLATION */
+        .tab-content { display: none !important; }
+        .tab-content.active { display: block !important; animation: fadeIn 0.4s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .nav-btn.active { background: var(--accent); color: white; opacity: 1; transform: scale(1.05); }
+        .nav-btn { opacity: 0.6; transition: all 0.2s ease; cursor: pointer; border-radius: 14px; }
+
+        .glass-card { background: var(--card); border: 1px solid var(--border); border-radius: 24px; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body data-theme="midnight">
+
+    <header class="p-6 flex flex-col md:flex-row justify-between items-center gap-6 sticky top-0 z-50 backdrop-blur-xl border-b border-white/5" style="background-color: var(--bg);">
+        <div class="flex items-center gap-3 cursor-pointer" onclick="isolateTab('home-tab', 'b-home')">
+            <div class="bg-blue-600 p-2 rounded-xl text-white font-black italic shadow-lg shadow-blue-500/20">NW</div>
+            <h1 class="text-xl font-extrabold tracking-tighter uppercase">NWIS <span class="text-blue-500">Utilities</span></h1>
+        </div>
+
+        <div class="flex gap-2 bg-black/30 p-1.5 rounded-2xl border border-white/10">
+            <button onclick="setTheme('light')" class="px-4 py-1.5 text-[10px] font-bold rounded-xl hover:bg-white/10 transition uppercase tracking-widest">Light</button>
+            <button onclick="setTheme('dark')" class="px-4 py-1.5 text-[10px] font-bold rounded-xl hover:bg-white/10 transition uppercase tracking-widest">Dark</button>
+            <button onclick="setTheme('midnight')" class="px-4 py-1.5 text-[10px] font-bold rounded-xl hover:bg-white/10 transition uppercase tracking-widest">Midnight</button>
+        </div>
+    </header>
+
+    <nav class="flex justify-center my-8 sticky top-[92px] z-40">
+        <div class="flex gap-2 bg-black/20 p-2 rounded-2xl border border-white/5 backdrop-blur-md overflow-x-auto no-scrollbar">
+            <button id="b-home" onclick="isolateTab('home-tab', 'b-home')" class="nav-btn active px-6 py-2.5 font-bold text-xs uppercase tracking-widest">Home</button>
+            <button id="b-maps" onclick="isolateTab('maps-tab', 'b-maps')" class="nav-btn px-6 py-2.5 font-bold text-xs uppercase tracking-widest">Campus</button>
+            <button id="b-fac" onclick="isolateTab('faculty-tab', 'b-fac')" class="nav-btn px-6 py-2.5 font-bold text-xs uppercase tracking-widest">Faculty</button>
+            <button id="b-can" onclick="isolateTab('canteen-tab', 'b-can')" class="nav-btn px-6 py-2.5 font-bold text-xs uppercase tracking-widest">Canteen</button>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto px-6 pb-32">
+
+        <section id="home-tab" class="tab-content active py-12 text-center">
+            <div class="max-w-2xl mx-auto mb-16">
+                <h2 class="text-5xl md:text-7xl font-black tracking-tight mb-6">Your School. <br><span class="text-blue-500">Simplified.</span></h2>
+                <p class="opacity-40 text-lg">A station for Utilities for the School.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div onclick="isolateTab('maps-tab', 'b-maps')" class="glass-card p-10 hover:border-blue-500 transition cursor-pointer group">
+                    <i class="fa-solid fa-map-location-dot text-3xl mb-4 text-blue-500 group-hover:scale-110 transition"></i>
+                    <h3 class="font-bold text-xl">Campus Maps</h3>
+                </div>
+                <div onclick="isolateTab('faculty-tab', 'b-fac')" class="glass-card p-10 hover:border-blue-500 transition cursor-pointer group">
+                    <i class="fa-solid fa-address-book text-3xl mb-4 text-blue-500 group-hover:scale-110 transition"></i>
+                    <h3 class="font-bold text-xl">Faculty Hub</h3>
+                </div>
+                <div onclick="isolateTab('canteen-tab', 'b-can')" class="glass-card p-10 hover:border-blue-500 transition cursor-pointer group">
+                    <i class="fa-solid fa-utensils text-3xl mb-4 text-blue-500 group-hover:scale-110 transition"></i>
+                    <h3 class="font-bold text-xl">Canteen Menu</h3>
+                </div>
+            </div>
+        </section>
+
+        <section id="maps-tab" class="tab-content grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="glass-card p-5 cursor-pointer" onclick="openMap('image_032059.jpg')">
+                <h3 class="font-black text-[10px] uppercase text-blue-500 mb-3 tracking-widest">Ground Floor Plan</h3>
+                <img src="image_032059.jpg" class="rounded-2xl w-full h-72 object-cover">
+            </div>
+            <div class="glass-card p-5 cursor-pointer" onclick="openMap('image_03203c.jpg')">
+                <h3 class="font-black text-[10px] uppercase text-blue-500 mb-3 tracking-widest">First Floor Plan</h3>
+                <img src="image_03203c.jpg" class="rounded-2xl w-full h-72 object-cover">
+            </div>
+            <div class="glass-card p-5 cursor-pointer" onclick="openMap('image_032036.jpg')">
+                <h3 class="font-black text-[10px] uppercase text-blue-500 mb-3 tracking-widest">Second Floor Plan</h3>
+                <img src="image_032036.jpg" class="rounded-2xl w-full h-72 object-cover">
+            </div>
+            <div class="glass-card p-5 cursor-pointer" onclick="openMap('image_03201b.jpg')">
+                <h3 class="font-black text-[10px] uppercase text-blue-500 mb-3 tracking-widest">Roof & Auditorium</h3>
+                <img src="image_03201b.jpg" class="rounded-2xl w-full h-72 object-cover">
+            </div>
+        </section>
+
+        <section id="faculty-tab" class="tab-content">
+            <div class="glass-card overflow-hidden">
+                <table class="w-full text-left">
+                    <thead class="bg-black/20 text-[10px] font-black uppercase tracking-widest opacity-40">
+                        <tr><th class="p-6">Name</th><th class="p-6">Subject</th><th class="p-6 text-right">Connect</th></tr>
+                    </thead>
+                    <tbody class="divide-y divide-white/5 text-sm">
+                        <script>
+                            const faculty = [
+                                {n: "Sir Adil", s: "Mathematics", p: "966571805536"},
+                                {n: "Sir Afroz", s: "Physics", p: "966581192786"},
+                                {n: "Sir Ahmed", s: "Deen", p: "966530582753"},
+                                {n: "Sir Ahsan", s: "Economics / Business", p: "966550876221"},
+                                {n: "Sir Akon", s: "Chemistry", p: "966547515481"},
+                                {n: "Sir Ali", s: "Arabic / Deen", p: "966546205324"},
+                                {n: "Sir Carlito", s: "English", p: "966598278591"},
+                                {n: "Sir Emit", s: "Mathematics", p: "966592502744"},
+                                {n: "Sir Haseeb", s: "Physics", p: "919515443616"},
+                                {n: "Sir Imran", s: "Chemistry", p: "966572142225"},
+                                {n: "Sir Karthy", s: "ICT", p: "966591238755"},
+                                {n: "Sir Kelvin", s: "Biology", p: "966508816520"},
+                                {n: "Sir Khaleefah", s: "Deen / SHG", p: "966532651541"},
+                                {n: "Sir Kiran", s: "CS / IT", p: "919495701099"},
+                                {n: "Sir Mohsin", s: "Accounting / Business", p: "966594162649"},
+                                {n: "Sir Nafea", s: "Arabic / Deen / SHG", p: "966565706419"},
+                                {n: "Sir Noel", s: "ICT", p: "966534104717"},
+                                {n: "Sir Osama", s: "English", p: "966568670811"},
+                                {n: "Sir Raza", s: "Chemistry", p: "966599453491"},
+                                {n: "Sir Sarfaraz", s: "English / Islamic Studies", p: "966581287863"},
+                                {n: "Sir Shaams", s: "Coordinator", p: "966545936788"},
+                                {n: "Sir Shakeel", s: "Biology", p: "966502919600"},
+                                {n: "Sir Sumair", s: "Chemistry", p: "966544725006"}
+                            ];
+                            document.write(faculty.map(f => `
+                                <tr>
+                                    <td class="p-6 font-bold">${f.n}</td>
+                                    <td class="p-6 opacity-60">${f.s}</td>
+                                    <td class="p-6 text-right"><a href="https://wa.me/${f.p}" target="_blank" class="bg-green-500/10 text-green-500 px-5 py-2 rounded-xl text-xs font-bold transition hover:bg-green-500 hover:text-white">WhatsApp</a></td>
+                                </tr>
+                            `).join(''));
+                        </script>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="canteen-tab" class="tab-content">
+            <div class="mb-10 text-center">
+                <p class="text-xs font-black uppercase tracking-widest text-blue-500 mb-2">Operating Hours</p>
+                <p class="opacity-40">Sun - Thu: During Break Times</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="glass-card p-6">
+                    <h4 class="font-black text-blue-500 mb-6 uppercase text-[10px] tracking-widest">Beverages</h4>
+                    <div class="space-y-4 text-sm">
+                        <div class="flex justify-between"><span>Water</span><span class="font-bold">1 SAR</span></div>
+                        <div class="flex justify-between"><span>Juice (All)</span><span class="font-bold">2 SAR</span></div>
+                    </div>
+                </div>
+                <div class="glass-card p-6">
+                    <h4 class="font-black text-blue-500 mb-6 uppercase text-[10px] tracking-widest">Snacks</h4>
+                    <div class="space-y-4 text-sm">
+                        <div class="flex justify-between"><span>Farah Corn Puffs</span><span class="font-bold">1 SAR</span></div>
+                        <div class="flex justify-between"><span>Chicken Crisps</span><span class="font-bold">1 SAR</span></div>
+                        <div class="flex justify-between"><span>Small Doritos</span><span class="font-bold">2 SAR</span></div>
+                        <div class="flex justify-between"><span>Wafers / Oreos</span><span class="font-bold">2 SAR</span></div>
+                    </div>
+                </div>
+                <div class="glass-card p-6">
+                    <h4 class="font-black text-blue-500 mb-6 uppercase text-[10px] tracking-widest">Bakery</h4>
+                    <div class="space-y-4 text-sm">
+                        <div class="flex justify-between"><span>Mini Cupcakes</span><span class="font-bold">2 SAR</span></div>
+                        <div class="flex justify-between"><span>Chocolate Loafcake</span><span class="font-bold">3 SAR</span></div>
+                    </div>
+                </div>
+                <div class="glass-card p-6">
+                    <h4 class="font-black text-blue-500 mb-6 uppercase text-[10px] tracking-widest">Hot Food</h4>
+                    <div class="space-y-4 text-sm">
+                        <div class="flex justify-between"><span>Corn Cup</span><span class="font-bold">4 SAR</span></div>
+                        <div class="flex justify-between"><span>Samosas</span><span class="font-bold">3 SAR</span></div>
+                        <div class="flex justify-between"><span>Manakeesh</span><span class="font-bold">5 SAR</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="mModal" class="fixed inset-0 bg-black/95 z-[100] hidden items-center justify-center p-4" onclick="closeMap()">
+        <img id="mImg" class="max-w-full max-h-full rounded-2xl">
+    </div>
+
+    <script>
+        function isolateTab(tabId, btnId) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            document.getElementById(btnId).classList.add('active');
+            window.scrollTo(0,0);
+        }
+        function setTheme(theme) { document.body.setAttribute('data-theme', theme); }
+        function openMap(src) { document.getElementById('mImg').src = src; document.getElementById('mModal').style.display = 'flex'; }
+        function closeMap() { document.getElementById('mModal').style.display = 'none'; }
+    </script>
+</body>
+</html>
